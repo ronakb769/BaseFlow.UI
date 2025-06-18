@@ -1,0 +1,51 @@
+
+ <h2 class="mb-4">{{ model }}</h2>
+<form [formGroup]="roleForm" (ngSubmit)="CreateUpdateRole()">
+  <div class="form-row">
+    <div class="form-group">
+      <label>Role Name</label>
+      <input type="text" class="form-control" [(ngModel)]="role.roleName" formControlName="roleName" placeholder="Enter role name">
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" class="form-control" [(ngModel)]="role.description" formControlName="description" placeholder="Enter description">
+    </div>
+  </div>
+
+  <!-- <div class="modules-row" *ngIf="permissions.length">
+    <div class="module-section">
+      <label>User Module</label>
+      <div *ngFor="let perm of userPermissions">
+        <input type="checkbox"
+               [formControl]="permissionControls[perm.permissionsId]">
+        {{ perm.permissionName.split('.')[1] }}
+      </div>
+    </div>
+
+    <div class="module-section">
+      <label>Role Module</label>
+      <div *ngFor="let perm of rolePermissions">
+        <input type="checkbox"
+               [formControl]="permissionControls[perm.permissionsId]">
+        {{ perm.permissionName.split('.')[1] }}
+      </div>
+    </div>
+  </div> -->
+  <div class="modules-row" *ngIf="permissions.length">
+  <div class="module-section" *ngFor="let module of modulePermissions | keyvalue">
+    <label>{{ module.key }} Module</label>
+
+    <div *ngFor="let perm of module.value">
+      <input type="checkbox"
+             [formControl]="permissionControls[perm.permissionsId]">
+      {{ perm.permissionName.split('.')[1] }}
+    </div>
+  </div>
+</div>
+
+  <div class="form-buttons">
+    <button type="submit" class="btn btn-primary">{{button}}</button>
+    <button type="button" class="btn btn-secondary" (click)="GoBack()">Back</button>
+  </div>
+</form>

@@ -1,0 +1,29 @@
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th {
+  background-color: #202020;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+
+.custom-table td, .custom-table th {
+  border: 1px solid #dee2e6;
+  padding: 10px;
+}
+.dropdown-menu {
+  z-index: 1050;
+}
+.custom-table th {
+  cursor: pointer;
+}
+
+
+
+
+

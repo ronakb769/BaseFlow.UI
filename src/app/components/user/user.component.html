@@ -1,0 +1,79 @@
+
+
+<div class="container mt-4">
+  <h2 class="mb-4">{{ model }}</h2>
+  <form #userForm="ngForm" enctype="multipart/form-data" novalidate>
+    <div class="row mb-4">
+
+      <!-- Profile Photo -->
+      <div class="profile-container">
+        <img [src]="imgSrc || defaultProfileUrl" alt="Profile Picture" class="profile-img" />
+        <label class="upload-btn">
+          Change Photo
+          <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+        </label>
+      </div>
+
+      <div class="col-md-9 row g-3 userCareteProfile">
+        <!-- First Name -->
+        <div class="col-md-6">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-control" [(ngModel)]="userUpdateModel.firstName" name="firstName" placeholder="Enter first name" />
+          <div class="text-danger" *ngIf="submitted && !userUpdateModel.firstName">First Name is required.</div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="col-md-6">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-control" [(ngModel)]="userUpdateModel.lastName" name="lastName" placeholder="Enter last name" />
+          <div class="text-danger" *ngIf="submitted && !userUpdateModel.lastName">Last Name is required.</div>
+        </div>
+
+        <!-- Email -->
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" [(ngModel)]="userUpdateModel.email" name="email" placeholder="Enter email" />
+          <div class="text-danger" *ngIf="submitted && !userUpdateModel.email">Email is required.</div>
+          <div class="text-danger" *ngIf="submitted && userUpdateModel.email && !isValidEmail(userUpdateModel.email)">Invalid email format.</div>
+        </div>
+
+        <!-- Phone -->
+        <div class="col-md-6">
+          <label class="form-label">Phone</label>
+          <input type="text" class="form-control" [(ngModel)]="userUpdateModel.phone" name="phone" placeholder="Enter phone number" />
+          <div class="text-danger" *ngIf="submitted && !userUpdateModel.phone">Phone is required.</div>
+          <div class="text-danger" *ngIf="submitted && userUpdateModel.phone && !isValidPhone(userUpdateModel.phone)">Phone must be exactly 10 digits.</div>
+        </div>
+
+        <div class="col-md-6" *ngIf="userUpdateModel.userId === 0">
+        <label class="form-label">Password</label>
+        <input [type]="showPassword ? 'text' : 'password'" class="form-control" [(ngModel)]="userUpdateModel.password" name="password" placeholder="Enter password" />
+        <div class="text-danger" *ngIf="submitted && !userUpdateModel.password">Password is required.</div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="col-md-6" *ngIf="userUpdateModel.userId === 0">
+          <label class="form-label">Confirm Password</label>
+          <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control" [(ngModel)]="userUpdateModel.confirmPassword" name="confirmPassword" placeholder="Confirm password" />
+          <div class="text-danger" *ngIf="submitted && !userUpdateModel.confirmPassword">Confirm Password is required.</div>
+          <div class="text-danger" *ngIf="submitted && userUpdateModel.password !== userUpdateModel.confirmPassword">Passwords do not match.</div>
+        </div>
+
+        <!-- Role -->
+        <div class="col-md-6">
+          <label class="form-label">Role</label>
+          <select class="form-select" name="role" [(ngModel)]="userUpdateModel.roleId">
+            <option value="" disabled>Select role</option>
+            <option *ngFor="let role of roleData" [value]="role.roleId">{{ role.roleName }}</option>
+          </select>
+          <div class="text-danger" *ngIf="submitted && !userUpdateModel.roleId">Role selection is required.</div>
+        </div>
+
+        <div class="col-md-6 d-flex align-items-end justify-content-start gap-2">
+          <button class="btn btn-dark" type="button" (click)="CreateUpdateUser()">{{ button }}</button>
+          <button class="btn btn-outline-secondary" style="width: 15%" type="button" (click)="goBack()">Back</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

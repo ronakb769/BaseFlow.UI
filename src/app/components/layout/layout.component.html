@@ -1,0 +1,72 @@
+<div class="d-flex flex-column vh-100">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-semibold fs-4" href="#">ERP Admin</a>
+
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown" [class.show]="dropdownOpen">
+          <a class="nav-link dropdown-toggle d-flex align-items-center text-white" href="#" (click)="toggleDropdown($event)">
+            <i class="bi bi-person-circle me-2"></i> <strong>{{ userName }}</strong>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end shadow" [class.show]="dropdownOpen">
+            <li>
+              <a class="dropdown-item" type="button" routerLink="/profile" routerLinkActive="active">
+                <i class="bi bi-person-circle me-2" ></i> Profile
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" type="button" (click)="resetPassword()">
+                <i class="bi bi-person-circle me-2" ></i> Reset Password
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="logout()">
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Layout -->
+  <div class="d-flex flex-grow-1 overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="bg-dark text-white p-3" style="width: 230px;">
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+          <a class="nav-link text-white d-flex align-items-center gap-2" routerLink="/dashboard" routerLinkActive="active">
+            <i class="bi bi-house-door-fill"></i> Home
+          </a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="nav-link text-white d-flex align-items-center gap-2" routerLink="/user-list" routerLinkActive="active">
+            <i class="bi bi-people-fill"></i> Users
+          </a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="nav-link text-white d-flex align-items-center gap-2" routerLink="/role-list" routerLinkActive="active">
+            <i class="bi bi-person-gear"></i> Roles
+          </a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="nav-link text-white d-flex align-items-center gap-2" routerLink="/login-history" routerLinkActive="active">
+            <i class="bi bi-clock-history"></i> Login History
+          </a>
+        </li>
+        <li class="nav-item mb-2">
+          <a class="nav-link text-white d-flex align-items-center gap-2" routerLink="/app-settings-list" routerLinkActive="active">
+            <i class="bi bi-gear"></i> Settings
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Content Area -->
+    <main class="flex-grow-1 bg-light p-4 overflow-auto">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

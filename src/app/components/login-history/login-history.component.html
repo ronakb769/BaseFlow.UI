@@ -1,0 +1,194 @@
+<div class="container mt-4">
+  <!-- Header and Filter Toggle -->
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+    <h2 class="mb-0 me-2">Login History</h2>
+    <div>
+      <input
+        type="text"
+        class="form-control w-100"
+        placeholder="Search User"
+        [(ngModel)]="searchText"
+        (keyup)="onSearchKeyUp()"
+      />
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="card card-body mb-4 shadow-sm">
+    <div class="row g-3 align-items-end">
+      <!-- Username multi-select -->
+      <div class="col-md-4">
+        <label class="form-label">Users</label>
+        <div class="position-relative">
+          <div
+            class="form-control d-flex flex-wrap gap-2"
+            (click)="toggleDropdown()"
+          >
+            <ng-container *ngFor="let user of selectedUsers">
+              <span class="badge bg-primary d-flex align-items-center">
+                {{ user }}
+                <span
+                  (click)="removeUser(user); $event.stopPropagation()"
+                  class="ms-2"
+                  role="button"
+                  >&times;</span
+                >
+              </span>
+            </ng-container>
+            <input
+              type="text"
+              class="form-control border-0 p-0 flex-grow-1 shadow-none"
+              placeholder="Search User"
+              [(ngModel)]="filterText"
+              (input)="filterUsers()"
+            />
+          </div>
+
+          <!-- Dropdown -->
+          <div
+            class="dropdown-menu show w-100 mt-1"
+            *ngIf="dropdownOpen"
+            style="max-height: 200px; overflow-y: auto"
+          >
+            <ng-container *ngIf="filteredUsers.length > 0; else noUsers">
+              <a
+                *ngFor="let user of filteredUsers"
+                href="#"
+                class="dropdown-item"
+                (click)="selectUser(user); $event.preventDefault()"
+              >
+                {{ user }}
+              </a>
+            </ng-container>
+            <ng-template #noUsers>
+              <span class="dropdown-item disabled">No more users</span>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <!-- From Date -->
+      <div class="col-md-3">
+        <label class="form-label">From</label>
+        <input type="date" class="form-control" [(ngModel)]="fromDate" />
+      </div>
+
+      <!-- To Date -->
+      <div class="col-md-3">
+        <label class="form-label">To</label>
+        <input type="date" class="form-control" [(ngModel)]="toDate" />
+      </div>
+
+      <!-- Buttons -->
+      <div class="col-md-2">
+        <label class="form-label invisible">Actions</label>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary w-50" (click)="onSearch()">
+            Search
+          </button>
+          <button class="btn btn-outline-secondary w-50" (click)="onReset()">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login History Table -->
+  <div class="table-responsive" *ngIf="!isLoading; else loading">
+    <table class="table table-bordered table-hover table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th (click)="onSort('userName')">User</th>
+          <th (click)="onSort('loginTime')">Login Time</th>
+          <th (click)="onSort('logoutTime')">Logout Time</th>
+          <th>IP Address</th>
+        </tr>
+      </thead>
+       <tbody>
+        <tr *ngFor="let user of dataSource">
+          <td>
+            {{ user.userName }}
+          </td>
+          <td>{{ user.loginTime | date: 'medium' }}</td>
+          <td>
+            {{ user.logoutTime ? (user.logoutTime | date: 'medium') : '-' }}
+          </td>
+          <td>{{ user.ipAddress }}</td>
+          </tr>
+          <tr *ngIf="!isLoading && dataSource.length === 0">
+  <td colspan="4" class="text-center text-muted">No records found</td>
+</tr>
+       </tbody>
+      <!-- User -->
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef (click)="onSort('userName')">
+          User
+          <span *ngIf="sortColumn === 'userName'">
+            <i
+              class="bi"
+              [ngClass]="
+                sortDirection === 'asc'
+                  ? 'bi-caret-up-fill'
+                  : 'bi-caret-down-fill'
+              "
+            >
+            </i>
+          </span>
+        </th>
+        <td mat-cell *matCellDef="let row">{{ row.userName }}</td>
+      </ng-container>
+
+      <!-- Login Time -->
+      <ng-container matColumnDef="loginTime">
+        <th mat-header-cell *matHeaderCellDef (click)="onSort('loginTime')">
+          Login Time
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.loginTime | date : "yyyy-MM-dd HH:mm:ss" }}
+        </td>
+      </ng-container>
+
+      <!-- Logout Time -->
+      <ng-container matColumnDef="logoutTime">
+        <th mat-header-cell *matHeaderCellDef (click)="onSort('logoutTime')">
+          Logout Time
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{
+            row.logoutTime
+              ? (row.logoutTime | date : "yyyy-MM-dd HH:mm:ss")
+              : "-"
+          }}
+        </td>
+      </ng-container>
+
+      <!-- IP Address -->
+      <ng-container matColumnDef="ipAddress">
+        <th mat-header-cell *matHeaderCellDef>IP Address</th>
+        <td mat-cell *matCellDef="let row">{{ row.ipAddress }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <ng-template #loading>
+    <div class="text-center my-4">
+      <mat-spinner></mat-spinner>
+    </div>
+    <tr *ngIf="!isLoading && dataSource.length === 0">
+    <td colspan="4" class="text-center">No records found</td>
+  </tr>
+  </ng-template>
+</div>
+
+
+<app-pagination *ngIf="!isLoading && dataSource.length !== 0"
+  [currentPage]="currentPage"
+  [totalPages]="totalPages"
+  [pageSize]="pageSize"
+  (pageChange)="changePage($event)"
+  (pageSizeChanged)="onPageSizeChange($event)"
+></app-pagination>

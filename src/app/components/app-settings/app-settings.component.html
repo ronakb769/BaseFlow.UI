@@ -1,0 +1,32 @@
+<div class="container mt-4">
+  <h2 class="mb-4">{{ model }}</h2>
+  <form #settingsForm="ngForm" novalidate>
+    <div class="row g-3">
+
+      <!-- Key (Disabled) -->
+      <div class="col-md-6">
+        <label class="form-label">Key</label>
+        <input type="text" class="form-control" [(ngModel)]="settingsModel.key" name="key" disabled />
+      </div>
+
+      <!-- Value (Editable) -->
+      <div class="col-md-6">
+        <label class="form-label">Value</label>
+        <input type="text" class="form-control" [(ngModel)]="settingsModel.value" name="value" placeholder="Enter value" />
+        <div class="text-danger" *ngIf="submitted && !settingsModel.value">Value is required.</div>
+      </div>
+
+      <!-- Description (Disabled) -->
+      <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" [(ngModel)]="settingsModel.description" name="description" rows="3" disabled></textarea>
+      </div>
+
+      <div class="col-12 d-flex justify-content-start gap-2">
+        <button class="btn btn-dark" type="button" (click)="updateSettings()">Update</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="goBack()">Back</button>
+      </div>
+
+    </div>
+  </form>
+</div>
