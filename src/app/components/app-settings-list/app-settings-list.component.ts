@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { MatTableModule } from '@angular/material/table';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-app-settings-list',
@@ -41,6 +42,7 @@ export class AppSettingsListComponent {
 
   appSettingsService = inject(AppSettingsService);
   router = inject(Router);
+  toastr = inject(ToastrService);
 
  constructor(private fb: FormBuilder) {
     this.settingForm = this.fb.group({
@@ -56,14 +58,30 @@ export class AppSettingsListComponent {
 
   isEmpty = () => this.dataSource.length === 0;
   loadSettings() {
-    this.appSettingsService.GetAppSettings().subscribe({
-      next: (response:any) => {
-        if (response.success) {
-          const result = response.data;
-          this.dataSource = response.data.data;
-          this.totalRecords = response.data.totalRecords;
+
+     const request: any = {
+      pageNumber: this.currentPage,
+      pageSize: this.pageSize,
+      searchText: this.searchText,
+      sortColumn: this.sortColumn,
+      sortDirection: this.sortDirection,
+    };
+
+
+    this.appSettingsService.GetAppSettings(request).subscribe({
+      next: (res:any) => {
+        if (res.success) {
+          const result = res.data;
+          this.dataSource = result.data;
+          this.totalRecords = result.totalRecords;
           this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        }else if( res.message === 'No app settings found') {
+          this.dataSource = [];
         }
+         else{
+           this.toastr.error(res.message, 'Failed');  
+           this.dataSource = [];
+         }
       },
       error: (err:any) => {
         console.error('Failed to load settings', err);

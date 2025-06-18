@@ -33,7 +33,7 @@ export class RoleListComponent {
       }
     },
     (error: any) => {
-      this.toastr.error('Failed to fetch users');
+      this.toastr.error('Failed to fetch roles');
     }
     )
 }

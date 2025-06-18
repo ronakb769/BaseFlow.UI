@@ -16,8 +16,8 @@ export class AppSettingsService {
       return new HttpHeaders().set('Authorization', `Bearer ${token}`);
     }
 
-    GetAppSettings() {
-      return this.http.get(`${this.BASE_URL}AppSettings/GetAllAppSettings`);
+    GetAppSettings(request: any) {
+      return this.http.post(`${this.BASE_URL}AppSettings/GetAllAppSettings`,request);
     }
 
     updateSetting(setting: any) {
