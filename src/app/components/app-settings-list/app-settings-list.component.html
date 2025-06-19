@@ -22,7 +22,7 @@
           <td>{{ setting.description }}</td>
         </tr>
         <tr *ngIf="!isLoading && dataSource.length === 0">
-          <td colspan="6" class="text-center text-muted">No records found</td>
+          <td colspan="3" class="text-center text-muted">No records found</td>
         </tr>
       </tbody>
     </table>
@@ -34,7 +34,7 @@
   </ng-template>
 </div>
 
-<app-pagination
+<app-pagination 
   [currentPage]="currentPage"
   [totalPages]="totalPages"
   [pageSize]="pageSize"
