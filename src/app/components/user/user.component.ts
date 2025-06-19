@@ -60,9 +60,13 @@ export class UserComponent {
       }
     });
 
-    this.userSrv.GetAllRole().subscribe({
+    const request = {
+      pageSize : -1,
+      pageNumber: 1,
+    }
+    this.userSrv.GetAllRole(request).subscribe({
       next: (res: any) => {
-        res.success ? (this.roleData = res.data) : this.toastr.error(res.message, 'Role not fetched');
+        res.success ? (this.roleData = res.data.data) : this.toastr.error(res.message, 'Role not fetched');
       },
       error: () => this.toastr.error('An error during fetching role', 'Error'),
     });
