@@ -23,8 +23,8 @@ export class UsersService {
     return this.http.get(`${this.BASE_URL}user/GetUserById/?userId=${id}`, { headers: this.getAuthHeaders() });
   }
 
-  GetAllRole(){ 
-    return this.http.get(`${this.BASE_URL}role/GetAllRoles`, { headers: this.getAuthHeaders() });
+  GetAllRole(request:any){ 
+    return this.http.post(`${this.BASE_URL}role/GetAllRoles`,request, { headers: this.getAuthHeaders() });
    }
 
   CreateUser(user: any) {
