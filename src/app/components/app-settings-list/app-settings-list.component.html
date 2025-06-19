@@ -9,8 +9,8 @@
       <thead class="table-dark">
         <tr>
           <th (click)="onSort('key')">Key</th>
-          <th (click)="onSort('value')">Value</th>
-          <th (click)="onSort('description')">Description</th>
+          <th>Value</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
@@ -34,7 +34,7 @@
   </ng-template>
 </div>
 
-<app-pagination 
+<app-pagination *ngIf="!isLoading && dataSource.length !== 0"
   [currentPage]="currentPage"
   [totalPages]="totalPages"
   [pageSize]="pageSize"
