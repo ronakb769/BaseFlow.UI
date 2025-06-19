@@ -74,7 +74,9 @@ export class LoginHistoryComponent {
     // Debounce search input
   this.searchSubject.pipe(debounceTime(300)).subscribe((text) => {
     if (text.length >= 3 || text.length === 0) {
-      this.onSearch(); // API call
+       this.currentPage = 1;
+       this.selectedUserNames = [...this.selectedUsers];
+       this.loadLoginHistory(false);
     }
   });
   }
@@ -153,8 +155,8 @@ export class LoginHistoryComponent {
 
     // ⬇️ Only include dates if user clicked Search
     if (applyDateFilters && this.fromDate && this.toDate) {
-      request.fromDate = this.fromDate;
-      request.toDate = this.toDate;
+      request.fromDate = this.formatDateToISO(this.fromDate);
+      request.toDate = this.formatDateToISO(this.toDate);
     }
 
     this.loginService.getLoginHistory(request).subscribe({
@@ -180,6 +182,14 @@ export class LoginHistoryComponent {
       },
     });
   }
+
+  formatDateToISO(dateStr: string): string {
+  const date = new Date(dateStr);
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
 
   onSearch(): void {
     this.currentPage = 1;

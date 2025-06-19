@@ -110,9 +110,9 @@
           <td>
             {{ user.userName }}
           </td>
-          <td>{{ user.loginTime | date: 'medium' }}</td>
+          <td>{{ user.loginTime | date:'MM/dd/yyyy hh:mm:ss a' }}</td>
           <td>
-            {{ user.logoutTime ? (user.logoutTime | date: 'medium') : '-' }}
+            {{ user.logoutTime ? (user.logoutTime | date:'MM/dd/yyyy hh:mm:ss a') : '-' }}
           </td>
           <td>{{ user.ipAddress }}</td>
           </tr>
