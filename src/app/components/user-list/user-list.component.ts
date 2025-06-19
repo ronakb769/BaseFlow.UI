@@ -36,7 +36,7 @@ export class UserListComponent implements OnInit {
   totalPages = 0;
 
   isLoading = false;
-  isActive = false;
+  isActive: boolean | null = null;
   searchText = '';
   sortColumn = '';
   sortDirection: 'asc' | 'desc' = 'desc';
@@ -64,13 +64,20 @@ export class UserListComponent implements OnInit {
   this.searchSubject.next(this.searchText.trim());
   }
   loadUsers(): void {
-    const request = {
+    const request:any = {
       pageNumber: this.currentPage,
       pageSize: this.pageSize,
       searchText: this.searchText,
       sortColumn: this.sortColumn,
       sortDirection: this.sortDirection,
     };
+
+      // ✅ Conditionally add isActive to request
+  if (this.isActive === true) {
+    request.isActive = true; // show active users only
+  } else if (this.isActive === false) {
+    request.isActive = false; // show inactive users only
+  }
 
     this.isLoading = true;
     this.userService.GetAllUsers(request).subscribe({
@@ -188,7 +195,11 @@ export class UserListComponent implements OnInit {
     // this.selectedUserNames = [...this.selectedUsers];
     this.loadUsers(); // apply date filters
   }
-  onStatusFilterChange(){
-
-  }
+  onStatusFilterChange(): void {
+  // Toggle ON means show only Active → set isActive = true
+  // Toggle OFF means show only Inactive → set isActive = false
+  // this.isActive = this.isActive === true ? false : true;
+  this.currentPage = 1;
+  this.loadUsers();
+}
 }
