@@ -1,57 +1,54 @@
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="mb-0">Role List</h2>
-      
-      <input
-        type="text"
-        class="form-control w-100"
-        placeholder="Search User"
-        [(ngModel)]="searchText"
-        (keyup)="onSearchKeyUp()"
-      />
-    
-      <button class="btn btn-dark" (click)="openUserModal()">
-        <i class="bi bi-plus-circle me-1"></i> Create New Role
-      </button>
-    </div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Role List</h2>
+    <button class="btn btn-dark" (click)="openUserModal()">
+      <i class="bi bi-plus-circle me-1"></i> Create New Role
+    </button>
+  </div>
+
+ <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+  <div class="ms-auto">
+    <input 
+      type="text" 
+      class="form-control w-100" 
+      placeholder="Search User" 
+      [(ngModel)]="searchText"
+      (keyup)="onSearchKeyUp()" 
+    />
+  </div>
   
-     <!--Table-->
-    <div class="table-responsive" *ngIf="!isLoading; else loading">
-      <table class="table table-bordered table-hover table-striped">
-        <thead class="table-dark">
-          <tr>
-            <th (click)="onSort('rolename')">Role Name</th>
-            <th>Description</th>
-            <!-- <th>Status</th> -->
-            <th (click)="onSort('createddate')">Created On</th>
-            <!-- <th>Actions</th>  -->
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let role of dataSource" (click)="editRole(role)" style="cursor: pointer;">
-            <td>{{ role.roleName }}</td>
-            <td>{{ role.description }}</td>
-            <td>{{ role.createdOn | date: 'medium' }}</td>
-          </tr>
-           <tr *ngIf="!isLoading && dataSource.length === 0">
+</div>
+
+  <!--Table-->
+  <div class="table-responsive" *ngIf="!isLoading; else loading">
+    <table class="table table-bordered table-hover table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th (click)="onSort('rolename')">Role Name</th>
+          <th>Description</th>
+          <!-- <th>Status</th> -->
+          <th (click)="onSort('createddate')">Created On</th>
+          <!-- <th>Actions</th>  -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let role of dataSource" (click)="editRole(role)" style="cursor: pointer;">
+          <td>{{ role.roleName }}</td>
+          <td>{{ role.description }}</td>
+          <td>{{ role.createdOn | date: 'medium' }}</td>
+        </tr>
+        <tr *ngIf="!isLoading && dataSource.length === 0">
           <td colspan="3" class="text-center text-muted">No records found</td>
         </tr>
-        </tbody>
-      </table>
-    </div>
-    <ng-template #loading>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #loading>
     <div class="text-center p-4">
       <div class="spinner-border text-primary" role="status"></div>
     </div>
   </ng-template>
-  </div>
+</div>
 
-  <app-pagination *ngIf="!isLoading && dataSource.length !== 0"
-  [currentPage]="currentPage"
-  [totalPages]="totalPages"
-  [pageSize]="pageSize"
-  (pageChange)="changePage($event)"
-  (pageSizeChanged)="onPageSizeChange($event)"
-></app-pagination>
-
-  
+<app-pagination *ngIf="!isLoading && dataSource.length !== 0" [currentPage]="currentPage" [totalPages]="totalPages"
+  [pageSize]="pageSize" (pageChange)="changePage($event)" (pageSizeChanged)="onPageSizeChange($event)"></app-pagination>

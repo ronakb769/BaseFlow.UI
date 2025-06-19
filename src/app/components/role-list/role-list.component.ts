@@ -6,6 +6,8 @@ import { Role } from '../../Models/Role';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { debounceTime, Subject } from 'rxjs';
+
 
 @Component({
   selector: 'app-role',
@@ -39,6 +41,11 @@ export class RoleListComponent {
 
   ngOnInit(): void {
     this.loadRole();
+
+    this.searchSubject.pipe(debounceTime(300)).subscribe((text) => {
+      if (text.length >= 3 || text.length === 0) {
+        this.onSearch(); 
+      }});
   }
 
   loadRole() {
@@ -51,20 +58,20 @@ export class RoleListComponent {
     };
 
     this.roleSrv.GetAllRole(request).subscribe({
-     next: (res:any) => {
+      next: (res: any) => {
         if (res.success) {
           const result = res.data;
           this.dataSource = result.data;
           this.totalRecords = result.totalRecords;
           this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-        }else if( res.message === 'No roles found') {
+        } else if (res.message === 'No roles found') {
           this.dataSource = [];
         }
-         else{
-           this.toastr.error(res.message, 'Failed');  
-           this.dataSource = [];
-         }
-      },error: (err:any) => {
+        else {
+          this.toastr.error(res.message, 'Failed');
+          this.dataSource = [];
+        }
+      }, error: (err: any) => {
         console.error('Failed to load settings', err);
       }
     })
@@ -98,8 +105,13 @@ export class RoleListComponent {
     this.currentPage = 1;
     this.loadRole();
   }
+
   onSearchKeyUp(): void {
-  this.searchSubject.next(this.searchText.trim());
+    this.searchSubject.next(this.searchText.trim());
+  }
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadRole(); // apply date filters
   }
 
 }
