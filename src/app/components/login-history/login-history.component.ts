@@ -74,9 +74,10 @@ export class LoginHistoryComponent {
     // Debounce search input
   this.searchSubject.pipe(debounceTime(300)).subscribe((text) => {
     if (text.length >= 3 || text.length === 0) {
-       this.currentPage = 1;
-       this.selectedUserNames = [...this.selectedUsers];
-       this.loadLoginHistory(false);
+      //  this.currentPage = 1;
+      //  this.selectedUserNames = [...this.selectedUsers];
+      //  this.loadLoginHistory(false);
+      this.onSearch();
     }
   });
   }
@@ -154,7 +155,8 @@ export class LoginHistoryComponent {
     };
 
     // ⬇️ Only include dates if user clicked Search
-    if (applyDateFilters && this.fromDate && this.toDate) {
+    // if (applyDateFilters && this.fromDate && this.toDate) {
+    if ( this.fromDate && this.toDate) {
       request.fromDate = this.formatDateToISO(this.fromDate);
       request.toDate = this.formatDateToISO(this.toDate);
     }

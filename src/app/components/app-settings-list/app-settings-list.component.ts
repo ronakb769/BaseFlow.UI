@@ -1,16 +1,17 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppSettingsService } from '../../Services/app-settings.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { MatTableModule } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-app-settings-list',
   standalone: true,
-  imports: [CommonModule,
+  imports: [CommonModule,FormsModule,
       ReactiveFormsModule,
       PaginationComponent,
       MatTableModule,],
@@ -29,7 +30,6 @@ export class AppSettingsListComponent {
   currentPage = 1;
   totalPages = 0;
 
-
   isLoading = false;
   isActive = false;
   searchText = '';
@@ -40,6 +40,7 @@ export class AppSettingsListComponent {
 
   settingForm: FormGroup;
 
+  private searchSubject = new Subject<string>();
   appSettingsService = inject(AppSettingsService);
   router = inject(Router);
   toastr = inject(ToastrService);
@@ -54,8 +55,19 @@ export class AppSettingsListComponent {
 
   ngOnInit() {
     this.loadSettings();
+    this.searchSubject.pipe(debounceTime(300)).subscribe((text) => {
+        if (text.length >= 3 || text.length === 0) {
+           this.currentPage = 1;
+          //  this.selectedUserNames = [...this.selectedUsers];
+          this.loadSettings();
+        }
+      });
   }
 
+
+    onSearchKeyUp(): void {
+  this.searchSubject.next(this.searchText.trim());
+  }
   isEmpty = () => this.dataSource.length === 0;
   loadSettings() {
 
