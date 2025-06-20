@@ -40,11 +40,11 @@ export class UserListComponent implements OnInit {
   searchText = '';
   sortColumn = '';
   sortDirection: 'asc' | 'desc' = 'desc';
+  selectedStatus: string = 'all';
 
   displayedColumns: string[] = ['userName', 'email', 'phone', 'status', 'createdOn', 'actions'];
 
   private searchSubject = new Subject<string>();
-
   private userService = inject(UsersService);
   private toastr = inject(ToastrService);
   private router = inject(Router);
@@ -52,19 +52,19 @@ export class UserListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUsers();
-     // Debounce search input
-      this.searchSubject.pipe(debounceTime(300)).subscribe((text) => {
-        if (text.length >= 3 || text.length === 0) {
-          this.onSearch(); // API call
-        }
-      });
+    // Debounce search input
+    this.searchSubject.pipe(debounceTime(300)).subscribe((text) => {
+      if (text.length >= 3 || text.length === 0) {
+        this.onSearch(); // API call
+      }
+    });
   }
 
-    onSearchKeyUp(): void {
-  this.searchSubject.next(this.searchText.trim());
+  onSearchKeyUp(): void {
+    this.searchSubject.next(this.searchText.trim());
   }
   loadUsers(): void {
-    const request:any = {
+    const request: any = {
       pageNumber: this.currentPage,
       pageSize: this.pageSize,
       searchText: this.searchText,
@@ -72,30 +72,37 @@ export class UserListComponent implements OnInit {
       sortDirection: this.sortDirection,
     };
 
-      // ✅ Conditionally add isActive to request
-  if (this.isActive === true) {
-    request.isActive = true; // show active users only
-  } else if (this.isActive === false) {
-    request.isActive = false; // show inactive users only
-  }
+    // // ✅ Conditionally add isActive to request
+    // if (this.isActive === true) {
+    //   request.isActive = true; // show active users only
+    // } else if (this.isActive === false) {
+    //   request.isActive = false; // show inactive users only
+    // }
+
+     // ✅ Conditionally add isActive based on selectedStatus
+    if (this.selectedStatus === 'active') {
+      request.isActive = true;
+    } else if (this.selectedStatus === 'inactive') {
+      request.isActive = false;
+    }
 
     this.isLoading = true;
     this.userService.GetAllUsers(request).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-         
+
         if (response.success) {
           const result = response.data;
           this.dataSource = result.data;
           this.totalRecords = result.totalRecords;
           this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-        } else if( response.message === 'No users found') {
+        } else if (response.message === 'No users found') {
           this.dataSource = [];
         }
-         else{
-           this.toastr.error(response.message, 'Failed');  
-           this.dataSource = [];
-         }
+        else {
+          this.toastr.error(response.message, 'Failed');
+          this.dataSource = [];
+        }
       },
       error: () => {
         this.isLoading = false;
@@ -190,16 +197,23 @@ export class UserListComponent implements OnInit {
     this.loadUsers();
   }
 
-    onSearch(): void {
+  onSearch(): void {
     this.currentPage = 1;
     // this.selectedUserNames = [...this.selectedUsers];
     this.loadUsers(); // apply date filters
   }
   onStatusFilterChange(): void {
-  // Toggle ON means show only Active → set isActive = true
-  // Toggle OFF means show only Inactive → set isActive = false
-  // this.isActive = this.isActive === true ? false : true;
-  this.currentPage = 1;
-  this.loadUsers();
-}
+    // Toggle ON means show only Active → set isActive = true
+    // Toggle OFF means show only Inactive → set isActive = false
+    // this.isActive = this.isActive === true ? false : true;
+    this.currentPage = 1;
+    this.loadUsers();
+  }
+
+  onStatusChange(event: Event): void {
+    this.selectedStatus = (event.target as HTMLSelectElement).value; // Update the selected status
+    this.currentPage = 1; // Reset to the first page
+    this.loadUsers(); // Reload users with the updated filter
+  }
+
 }

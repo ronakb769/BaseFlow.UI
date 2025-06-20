@@ -1,6 +1,6 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0">Role List</h2>
+    <h3 class="mb-0">Role List</h3>
     <button class="btn btn-dark" (click)="openUserModal()">
       <i class="bi bi-plus-circle me-1"></i> Create New Role
     </button>
@@ -11,7 +11,7 @@
     <input 
       type="text" 
       class="form-control w-100" 
-      placeholder="Search User" 
+      placeholder="Search" 
       [(ngModel)]="searchText"
       (keyup)="onSearchKeyUp()" 
     />
@@ -44,7 +44,7 @@
     </table>
   </div>
   <ng-template #loading>
-    <div class="text-center p-4">
+    <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
       <div class="spinner-border text-primary" role="status"></div>
     </div>
   </ng-template>
