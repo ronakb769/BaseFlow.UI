@@ -1,16 +1,7 @@
 <div class="container mt-4">
   <!-- Header and Filter Toggle -->
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-    <h2 class="mb-0 me-2">Login History</h2>
-    <div>
-      <input
-        type="text"
-        class="form-control w-100"
-        placeholder="Search User"
-        [(ngModel)]="searchText"
-        (keyup)="onSearchKeyUp()"
-      />
-    </div>
+    <h3 class="mb-0 me-2">User Login History ({{totalRecords}})</h3>
   </div>
 
   <!-- Filters Section -->
@@ -38,7 +29,7 @@
             <input
               type="text"
               class="form-control border-0 p-0 flex-grow-1 shadow-none"
-              placeholder="Search User"
+              placeholder="Select User"
               [(ngModel)]="filterText"
               (input)="filterUsers()"
             />
@@ -93,6 +84,21 @@
       </div>
     </div>
   </div>
+
+ <div class="d-flex justify-content-end align-items-center mb-3 flex-wrap ">
+  <div class="position-relative" style="width: 200px;">
+    <input
+      type="text"
+      class="form-control ps-5"
+      placeholder="Search"
+      [(ngModel)]="searchText"
+      (keyup)="onSearchKeyUp()"
+    />
+    <i
+      class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"
+    ></i>
+  </div>
+</div>  
 
   <!-- Login History Table -->
   <div class="table-responsive" *ngIf="!isLoading; else loading">
@@ -174,14 +180,11 @@
     </table>
   </div>
 
-  <ng-template #loading>
-    <div class="text-center my-4">
-      <mat-spinner></mat-spinner>
-    </div>
-    <tr *ngIf="!isLoading && dataSource.length === 0">
-    <td colspan="4" class="text-center">No records found</td>
-  </tr>
-  </ng-template>
+ <ng-template #loading>
+  <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
 </div>
 
 
